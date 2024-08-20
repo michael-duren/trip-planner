@@ -1,0 +1,11 @@
+package views
+
+import "trip-planner/cmd/web/views/components/layout"
+
+templ Trips(email string) {
+	@layout.MainLayout() {
+		<div>
+			<h2>{ email }</h2>
+		</div>
+	}
+}

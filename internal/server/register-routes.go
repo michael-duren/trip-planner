@@ -8,6 +8,7 @@ import (
 	"trip-planner/cmd/web/controllers"
 	"trip-planner/cmd/web/views"
 	"trip-planner/internal/server/handlers"
+	"trip-planner/internal/server/routes"
 
 	"github.com/a-h/templ"
 )
@@ -25,7 +26,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/health", s.healthHandler)
 
 	// web
-	mux.HandleFunc("/", c.Home.Get)
+	mux.HandleFunc(routes.Home, c.Home.Get)
+	mux.HandleFunc(routes.Trips, c.Trips.Get)
 	mux.Handle("/web", templ.Handler(views.HelloForm()))
 	mux.HandleFunc("/hello", c.HelloWorld.Post)
 
