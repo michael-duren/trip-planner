@@ -7,17 +7,17 @@ import (
 	"trip-planner/internal/database"
 )
 
-type HelloWorldController struct {
+type HelloWorld struct {
 	queries *database.Queries
 }
 
-func NewHelloWorldController(q *database.Queries) *HelloWorldController {
-	return &HelloWorldController{
+func NewHelloWorld(q *database.Queries) *HelloWorld {
+	return &HelloWorld{
 		queries: q,
 	}
 }
 
-func (c *HelloWorldController) Post(w http.ResponseWriter, r *http.Request) {
+func (c *HelloWorld) Post(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)

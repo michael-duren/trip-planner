@@ -6,17 +6,17 @@ import (
 	"trip-planner/internal/database"
 )
 
-type HomeController struct {
+type Home struct {
 	queries *database.Queries
 }
 
-func NewHomeController(q *database.Queries) *HomeController {
-	return &HomeController{
+func NewHome(q *database.Queries) *Home {
+	return &Home{
 		queries: q,
 	}
 }
 
-func (c *HomeController) Get(w http.ResponseWriter, r *http.Request) {
+func (c *Home) Get(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
