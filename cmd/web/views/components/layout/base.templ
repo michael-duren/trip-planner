@@ -1,4 +1,4 @@
-package views
+package layout
 
 templ Base() {
 	<!DOCTYPE html>
@@ -9,10 +9,6 @@ templ Base() {
 			<link href="assets/css/output.css" rel="stylesheet"/>
 			<script src="assets/js/htmx.min.js"></script>
 		</head>
-		<body>
-			<main>
-				{ children... }
-			</main>
-		</body>
+        { children... }
 	</html>
 }

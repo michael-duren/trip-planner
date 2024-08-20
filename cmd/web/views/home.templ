@@ -1,12 +1,20 @@
 package views
 
+import "trip-planner/cmd/web/views/components/layout"
+
 templ Home() {
-    @Base() {
-        <div class="flex flex-col min-h-[100vh]">
-            <header>
-                <h2>Trip Planner</h2>
-            </header>
-            <h1>Home</h1>
+        @layout.MainLayout() {
+        <div class="flex flex-col items-center justify-center gap-8">
+            <div class="mx-auto">
+                <img class="rounded-md h-[50vh] max-h-[70vh] shadow-md" src="assets/img/lake.jpeg" alt="a picture of a lake" />
+            </div>
+            <form class="flex flex-col flex-1 gap-4 max-w-[635px] w-full">
+                <label for="email">Enter your email to get started</label>
+                <div class="flex gap-4">
+                    <input class="p-8 w-full border border-gray-600 text-lg rounded-md" name="email" type="email" />
+                    <button class="px-8 py-6 text-xl font-bold rounded-md bg-green-500 hover:bg-green-600 text-gray-50">Start</button>
+                </div>
+            </form>
         </div>
-    }
+        }
 }

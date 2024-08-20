@@ -1,7 +1,10 @@
 package views
 
+import "trip-planner/cmd/web/views/components/layout"
+
+
 templ HelloForm() {
-	@Base() {
+	@layout.MainLayout() {
 		<form hx-post="/hello" method="POST" hx-target="#hello-container">
 			<input class="border" id="name" name="name" type="text"/>
 			<button type="submit">Submit</button>
