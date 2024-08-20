@@ -3,15 +3,23 @@ package controllers
 import (
 	"net/http"
 	"trip-planner/cmd/web/views"
-
-	"github.com/a-h/templ"
+	"trip-planner/internal/database"
 )
 
-func HomeController(w http.ResponseWriter, r *http.Request) {
+type HomeController struct {
+	queries *database.Queries
+}
+
+func NewHomeController(q *database.Queries) *HomeController {
+	return &HomeController{
+		queries: q,
+	}
+}
+
+func (c *HomeController) Get(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 	}
-
-	templ.Handler(views.Home())
+	RenderComponent(views.Home(), w, r)
 }

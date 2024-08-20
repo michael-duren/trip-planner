@@ -17,7 +17,7 @@ func NewHelloWorldController(q *database.Queries) *HelloWorldController {
 	}
 }
 
-func (c *HelloWorldController) HelloWebHandler(w http.ResponseWriter, r *http.Request) {
+func (c *HelloWorldController) Post(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Bad Request", http.StatusBadRequest)
