@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
 	"trip-planner/internal/database"
 	"trip-planner/internal/server/routes"
@@ -31,7 +32,7 @@ func (c *Home) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderComponent(views.Home(), w, r)
+	RenderComponent(views.Home(*models.NewHomeModel("")), w, r)
 }
 
 func (c *Home) Post(w http.ResponseWriter, r *http.Request) {

@@ -1,11 +1,14 @@
 package views
 
-import "trip-planner/cmd/web/views/components/layout"
+import (
+	"trip-planner/cmd/web/models"
+	"trip-planner/cmd/web/views/components/layout"
+)
 
-templ Trips(email string) {
-	@layout.MainLayout() {
+templ Trips(model *models.TripsModel) {
+	@layout.MainLayout(model.MainLayoutModel) {
 		<div>
-			<h2>{ email }</h2>
+			<h2>{ model.Email }</h2>
 		</div>
 	}
 }

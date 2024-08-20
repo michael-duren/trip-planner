@@ -1,13 +1,15 @@
 package layout
 
-templ MainLayout() {
-    @Base() {
-            <body class="flex flex-col min-h-[100vh]">
-                @Header(nil)
-                <main class="flex-1 m-8">
-                    { children... }
-                </main>
-                @Footer()
-            </body>
-        }
+import "trip-planner/cmd/web/models"
+
+templ MainLayout(model *models.MainLayoutModel) {
+	@Base() {
+		<body class="flex flex-col min-h-[100vh]">
+			@Header(&model.Email)
+			<main class="flex-1 m-8">
+				{ children... }
+			</main>
+			@Footer()
+		</body>
+	}
 }
