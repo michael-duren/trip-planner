@@ -6,16 +6,14 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"trip-planner/internal/database"
 
 	_ "github.com/joho/godotenv/autoload"
-
-	"trip-planner/internal/database"
 )
 
 type Server struct {
+	db   database.Service
 	port int
-
-	db database.Service
 }
 
 func NewServer() *http.Server {

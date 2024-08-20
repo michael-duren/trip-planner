@@ -4,41 +4,36 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"trip-planner/cmd/web"
+	"trip-planner/cmd/web/controllers"
+	"trip-planner/cmd/web/views"
+	"trip-planner/internal/server/handlers"
 
 	"github.com/a-h/templ"
-	"trip-planner/cmd/web"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
-
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", s.HelloWorldHandler)
-
-	mux.HandleFunc("/health", s.healthHandler)
+	h := handlers.NewHandlers(s.db.UseQueries())
+	c := controllers.NewControllers(s.db.UseQueries())
 
 	fileServer := http.FileServer(http.FS(web.Files))
 	mux.Handle("/assets/", fileServer)
-	mux.Handle("/web", templ.Handler(web.HelloForm()))
-	mux.HandleFunc("/hello", web.HelloWebHandler)
+
+	// api
+	mux.HandleFunc("/test-endpoint", h.HelloWorldHandler)
+	mux.HandleFunc("/health", s.healthHandler)
+
+	// web
+	mux.Handle("/web", templ.Handler(views.HelloForm()))
+	mux.HandleFunc("/hello", c.HelloWebHandler)
+	mux.Handle("/home", templ.Handler(views.Home()))
 
 	return mux
 }
 
-func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
-
-	jsonResp, err := json.Marshal(resp)
-	if err != nil {
-		log.Fatalf("error handling JSON marshal. Err: %v", err)
-	}
-
-	_, _ = w.Write(jsonResp)
-}
-
 func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResp, err := json.Marshal(s.db.Health())
-
 	if err != nil {
 		log.Fatalf("error handling JSON marshal. Err: %v", err)
 	}

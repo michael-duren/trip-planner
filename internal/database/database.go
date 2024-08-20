@@ -13,19 +13,24 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-// Service represents a service that interacts with a database.
+// Service represents a Service that interacts with a database.
 type Service interface {
 	// Health returns a map of health status information.
-	// The keys and values in the map are service-specific.
+	// The keys and values in the map are Service-specific.
 	Health() map[string]string
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
 	Close() error
+
+	// UseQueries returns a pointer to the query struct
+	// exposed by sqlc
+	UseQueries() *Queries
 }
 
 type service struct {
-	db *sql.DB
+	db      *sql.DB
+	queries *Queries
 }
 
 var (
@@ -35,6 +40,7 @@ var (
 	port       = os.Getenv("DB_PORT")
 	host       = os.Getenv("DB_HOST")
 	schema     = os.Getenv("DB_SCHEMA")
+	env        = os.Getenv("APP_ENV")
 	dbInstance *service
 )
 
@@ -43,15 +49,26 @@ func New() Service {
 	if dbInstance != nil {
 		return dbInstance
 	}
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
+	var connStr string
+	if env == "local" {
+		connStr = fmt.Sprintf("postgres://localhost:%s/%s", port, database)
+	} else {
+		connStr = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
+	}
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
+	q := NewQueries(db)
 	dbInstance = &service{
-		db: db,
+		db:      db,
+		queries: q,
 	}
 	return dbInstance
+}
+
+func (s *service) UseQueries() *Queries {
+	return s.queries
 }
 
 // Health checks the health of the database connection by pinging the database.
