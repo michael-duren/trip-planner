@@ -3,13 +3,13 @@ package controllers
 import "trip-planner/internal/database"
 
 type Controllers struct {
-	*HelloWorldController
-	*HomeController
+	*HelloWorld
+	*Home
 }
 
 func NewControllers(q *database.Queries) *Controllers {
 	return &Controllers{
-		NewHelloWorldController(q),
-		NewHomeController(q),
+		NewHelloWorld(q),
+		NewHome(q),
 	}
 }
