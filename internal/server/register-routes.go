@@ -26,8 +26,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/health", s.healthHandler)
 
 	// web
-	mux.HandleFunc(routes.Home, c.Home.Get)
-	mux.HandleFunc(routes.Trips, c.Trips.Get)
+	mux.HandleFunc(routes.Home, c.Home.Map)
+	mux.HandleFunc(routes.Trips, c.Trips.Map)
 	mux.Handle("/web", templ.Handler(views.HelloForm()))
 	mux.HandleFunc("/hello", c.HelloWorld.Post)
 

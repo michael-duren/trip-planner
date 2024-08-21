@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
@@ -18,6 +19,13 @@ func NewTrips(q *database.Queries) *Trips {
 	}
 }
 
+func (c *Trips) Map(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		c.Get(w, r)
+	}
+}
+
 func (c *Trips) Get(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 	if email == "" {
@@ -25,6 +33,10 @@ func (c *Trips) Get(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, routes.Home, http.StatusTemporaryRedirect)
 		return
 	}
+	user, _ := c.queries.GetUserByEmail(r.Context(), email)
+	trips, _ := c.queries.ListUserTrips(r.Context(), user.UserID)
+	logger := log.Default()
+	logger.Println("total trips: ", len(trips))
 
-	RenderComponent(views.Trips(models.NewTripsModel(email)), w, r)
+	RenderComponent(views.Trips(models.NewTripsModel(email, &trips)), w, r)
 }

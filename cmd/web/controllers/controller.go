@@ -1,6 +1,8 @@
 package controllers
 
-import "trip-planner/internal/database"
+import (
+	"trip-planner/internal/database"
+)
 
 type Controllers struct {
 	*HelloWorld

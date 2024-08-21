@@ -6,7 +6,7 @@ templ Header(email *string) {
 	<header class="bg-blue-600 flex justify-between text-gray-50 shadow-md py-4 px-8">
 		<h2 class="text-2xl font-bold font-serif">Trip Planner</h2>
 		<div class="flex gap-2 items-center">
-			if email != nil || *email == "" {
+			if email != nil && *email != "" {
 				<p>
 					{ *email }
 				</p>

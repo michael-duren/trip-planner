@@ -19,16 +19,20 @@ func NewHome(q *database.Queries) *Home {
 	}
 }
 
+func (c *Home) Map(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		c.Get(w, r)
+	case "POST":
+		c.Post(w, r)
+	}
+}
+
 func (c *Home) Get(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 	if email != "" {
 		// redirect to trips if already in q params
 		http.Redirect(w, r, fmt.Sprintf("%s?email=%s", routes.Trips, email), http.StatusFound)
-		return
-	}
-
-	if r.Method == "POST" {
-		c.Post(w, r)
 		return
 	}
 

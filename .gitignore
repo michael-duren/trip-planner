@@ -28,3 +28,13 @@ tmp/
 # Project build
 main
 *templ.go
+query.sql.go
+
+.DS_Store
+
+# sqlc
+internal/database/db.go
+internal/database/models.go
+
+# tailwind
+output.css

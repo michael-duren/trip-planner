@@ -44,7 +44,7 @@ var (
 	dbInstance *service
 )
 
-func New() Service {
+func NewService() Service {
 	// Reuse Connection
 	if dbInstance != nil {
 		return dbInstance
