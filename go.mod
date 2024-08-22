@@ -1,6 +1,8 @@
 module trip-planner
 
-go 1.21.4
+go 1.23
+
+toolchain go1.23.0
 
 require (
 	github.com/a-h/templ v0.2.747
@@ -9,6 +11,8 @@ require (
 )
 
 require (
+	github.com/gorilla/securecookie v1.1.2 // indirect
+	github.com/gorilla/sessions v1.4.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
