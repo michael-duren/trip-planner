@@ -8,6 +8,7 @@ type Controllers struct {
 	*HelloWorld
 	*Home
 	*Trips
+	*TripBuilder
 }
 
 func NewControllers(q *database.Queries) *Controllers {
@@ -15,5 +16,6 @@ func NewControllers(q *database.Queries) *Controllers {
 		NewHelloWorld(q),
 		NewHome(q),
 		NewTrips(q),
+		NewTripBuilder(q),
 	}
 }

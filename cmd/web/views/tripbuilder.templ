@@ -1,0 +1,12 @@
+package views
+
+import (
+	"trip-planner/cmd/web/models"
+	"trip-planner/cmd/web/views/components/layout"
+)
+
+templ TripBuilder(model *models.TripBuildersModel) {
+	@layout.MainLayout(model.MainLayoutModel) {
+		<div>{ model.Tripname }</div>
+	}
+}

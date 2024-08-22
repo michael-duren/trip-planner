@@ -1,0 +1,10 @@
+package ui
+
+type LinkProps struct {
+	Label string
+	Uri   templ.SafeURL
+}
+
+templ Link(props *LinkProps) {
+	<a class="text-blue-500 hover:text-blue-700 font-semibold" href={ templ.SafeURL(props.Uri) }>{ props.Label }</a>
+}

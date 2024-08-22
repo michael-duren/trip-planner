@@ -3,47 +3,13 @@ package views
 import (
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views/components/layout"
+	"trip-planner/cmd/web/views/components/trips"
 )
 
 templ Trips(model *models.TripsModel) {
 	@layout.MainLayout(model.MainLayoutModel) {
-		<div>
-			<div class="flex justify-between">
-				<h2 class="text-xl font-bold mb-2">Showing trips for { model.Email }</h2>
-				<div class="group overflow-hidden flex justify-end flex-col items-end">
-					<button
-						class="bg-green-500 group shadow-md h-8 flex items-center justify-center w-8 rounded-md hover:bg-green-600"
-					>
-						<svg
-							width="800px"
-							class="text-white h-6 w-6"
-							height="800px"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-						>
-							<circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="1.5"></circle>
-							<path
-								d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15"
-								stroke="#fff"
-								stroke-width="1.5"
-								stroke-linecap="round"
-							></path>
-						</svg>
-					</button>
-					<div class="group-hover:translate-x-0 translate-x-96 text-sm border p-1 shadow-md duration-300 transition-transform">Add a new trip</div>
-				</div>
-			</div>
-			<div class="flex flex-col gap-2">
-				if model.Trips == nil || len(*model.Trips) == 0 {
-					<p>No trips started yet.</p>
-					<p>Click the plus button to start a new one!</p>
-				} else {
-					for _, t := range *model.Trips {
-						<p>{ t.Name }</p>
-					}
-				}
-			</div>
+		<div class="duration-500 htmx-swapping:opacity-0 transition-opacity" id="trips-container">
+			@trips.TripList(model)
 		</div>
 	}
 }

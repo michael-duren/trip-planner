@@ -25,9 +25,15 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc("/test-endpoint", h.HelloWorldHandler)
 	mux.HandleFunc("/health", s.healthHandler)
 
-	// web
+	// home
 	mux.HandleFunc(routes.Home, c.Home.Map)
+	// trips
 	mux.HandleFunc(routes.Trips, c.Trips.Map)
+	mux.HandleFunc(routes.NewTrips, c.Trips.MapNewTrips)
+	// tripbuilder
+	mux.HandleFunc(routes.TripBuilder, c.TripBuilder.Map)
+
+	// examples
 	mux.Handle("/web", templ.Handler(views.HelloForm()))
 	mux.HandleFunc("/hello", c.HelloWorld.Post)
 

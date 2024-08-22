@@ -1,0 +1,32 @@
+package trips
+
+import (
+	"trip-planner/cmd/web/views/components/ui"
+	"trip-planner/internal/server/routes"
+)
+
+// Needed for Trip is just a name
+templ NewTrip(email string) {
+	<form class="flex flex-col gap-2" action="/trips/new" method="POST">
+		<div class="flex justify-between">
+			<h1 class="text-2xl font-bold">New Trip</h1>
+			<div>
+				@ui.Link(&ui.LinkProps{Label: "Back", Uri: routes.SafeQueryParamBuilder(routes.Home,
+					map[string]string{"email": email})})
+			</div>
+		</div>
+		@ui.TextInput(&ui.InputProps{
+			Name:        "trip-name",
+			Placeholder: "Enter trip name",
+			Label:       "Trip Name",
+			Inputtype:   "text",
+			Required:    true,
+		})
+		@ui.Button(&ui.ButtonProps{
+			ButtonType:  "submit",
+			ButtonStyle: ui.Green,
+		}) {
+			Start
+		}
+	</form>
+}
