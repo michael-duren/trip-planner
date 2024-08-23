@@ -1,12 +1,21 @@
 package authforms
 
-import "trip-planner/cmd/web/views/components/ui"
+import (
+	"trip-planner/cmd/web/views/components/ui"
+	"trip-planner/internal/server/routes"
+)
 
 type LoginValidationErrors map[string]string
 
 templ LoginForm(loginValidationErrors *LoginValidationErrors) {
 	@ui.Modal() {
-		<form class="flex flex-col gap-2 p-8 w-80">
+		<form
+			hx-post={ routes.Login }
+			id="login-form"
+			hx-swap="outerHTML"
+			hx-target="#login-form"
+			class="flex flex-col gap-2 p-8 w-80"
+		>
 			<div class="flex justify-between">
 				<h2 class="text-lg font-semibold">Login</h2>
 				<!-- <button type="button" @click="login = !login">X</button> -->
@@ -48,7 +57,7 @@ templ LoginForm(loginValidationErrors *LoginValidationErrors) {
 			if loginValidationErrors != nil {
 				<ul>
 					for _, v := range *loginValidationErrors {
-						<li class="text-red-500">{ v }</li>
+						<li class="font-semibold text-sm list-disc text-red-500">{ v }</li>
 					}
 				</ul>
 			}

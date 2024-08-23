@@ -28,7 +28,9 @@ func NewAuth(q *database.Queries, u auth.UserSessionStore, l logging.Logger) *Au
 func (c *Auth) MapLogin(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		return
+		c.GetLogin(w, r)
+	case "POST":
+		c.PostLogin(w, r)
 	}
 }
 
@@ -41,30 +43,57 @@ func (c *Auth) PostLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		c.logger.Info("unable to parse form from postregister")
 		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
 	}
 
 	email := r.FormValue("email")
 	password := r.FormValue("password")
-	pwdHash, err := auth.HashPassword(password)
-	if err != nil {
-		c.logger.Panicf("unable to hash pwd in PostLogin method. Ending program, error: %s", err.Error())
-	}
-	user, err := c.queries.LoginUser(r.Context(), database.LoginUserParams{
-		Email:    email,
-		Password: pwdHash,
-	})
+
+	// Fetch the user by email
+	user, err := c.queries.GetUserByEmail(r.Context(), email)
 	if errors.Is(err, sql.ErrNoRows) {
-		RenderComponent(authforms.LoginForm(&authforms.LoginValidationErrors{"email": "email or password is incorrect"}), w, r)
+		RenderComponent(authforms.LoginForm(&authforms.LoginValidationErrors{"email": "Email or Password is incorrect"}), w, r)
 		return
 	}
-	c.store.CreateUserSession(r, w, &user)
-	http.Redirect(w, r, routes.Trips, http.StatusOK)
+
+	// Compare the provided password with the stored hash
+	err = auth.CheckPasswordHash(password, user.Password)
+	if err != nil {
+		RenderComponent(authforms.LoginForm(&authforms.LoginValidationErrors{"password": "Email or Password is incorrect"}), w, r)
+		return
+	}
+
+	// Create user session
+	err = c.store.CreateUserSession(r, w, &user)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirect after successful login
+	w.Header().Set("HX-Redirect", routes.Trips)
+	w.WriteHeader(http.StatusOK)
+}
+
+func (c *Auth) MapLogout(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+		err := c.store.DeleteUserSession(r, w)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		// Redirect after successful logout
+		http.Redirect(w, r, routes.Home, http.StatusSeeOther)
+	}
 }
 
 func (c *Auth) MapRegister(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		return
+		c.GetRegister(w, r)
+	case "POST":
+		c.PostRegister(w, r)
 	}
 }
 
@@ -76,7 +105,7 @@ func (c *Auth) PostRegister(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		c.logger.Info("unable to parse form from postregister")
-		http.Error(w, "Bad Request", http.StatusBadRequest)
+		http.Error(w, "Bad Request", http.StatusFound)
 	}
 
 	// TODO: find better way to parse forms
@@ -85,17 +114,36 @@ func (c *Auth) PostRegister(w http.ResponseWriter, r *http.Request) {
 	password := r.FormValue("password")
 	repwd := r.FormValue("re-password")
 
+	formVals := authforms.RegisterFormValues{
+		Username:   username,
+		Email:      email,
+		Password:   password,
+		RePassword: repwd,
+	}
+
 	// TODO: Find better validation procedure
 	if password != repwd {
-		RenderComponent(authforms.RegisterForm(&authforms.RegisterFormValidationErrors{"Password": "Passwords do not match"}), w, r)
+		RenderComponent(
+			authforms.RegisterForm(authforms.NewRegisterFormProps(&authforms.RegisterFormValidationErrors{"Password": "Passwords do not match"}, &formVals)),
+			w,
+			r,
+		)
+		return
 	}
 	_, err = c.queries.GetUserByEmail(r.Context(), email)
 	if !errors.Is(err, sql.ErrNoRows) {
-		RenderComponent(authforms.RegisterForm(&authforms.RegisterFormValidationErrors{"Email": "A user with this email address already exists"}), w, r)
+		RenderComponent(
+			authforms.RegisterForm(authforms.NewRegisterFormProps(&authforms.RegisterFormValidationErrors{"Email": "A user with this email address already exists"}, &formVals)),
+			w,
+			r,
+		)
+		return
 	}
 	_, err = c.queries.GetUserByUsername(r.Context(), username)
 	if !errors.Is(err, sql.ErrNoRows) {
-		RenderComponent(authforms.RegisterForm(&authforms.RegisterFormValidationErrors{"Username": "A user with this username address already exists"}), w, r)
+		registerValidationErrors := &authforms.RegisterFormValidationErrors{"Username": "A user with this username address already exists"}
+		RenderComponent(authforms.RegisterForm(authforms.NewRegisterFormProps(registerValidationErrors, &formVals)), w, r)
+		return
 	}
 
 	// create user
@@ -115,7 +163,12 @@ func (c *Auth) PostRegister(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusInternalServerError)
 	}
 
-	c.store.CreateUserSession(r, w, &newDbUser)
+	err = c.store.CreateUserSession(r, w, &newDbUser)
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusInternalServerError)
+	}
 
-	http.Redirect(w, r, routes.Trips, http.StatusCreated)
+	// Redirect after successful registration
+	w.Header().Set("HX-Redirect", routes.Trips)
+	w.WriteHeader(http.StatusCreated)
 }

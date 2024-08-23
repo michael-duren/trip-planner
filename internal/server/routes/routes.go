@@ -10,6 +10,7 @@ const (
 	// apis
 	Login    = "/api/auth/login"
 	Register = "/api/auth/register"
+    Logout   = "/api/auth/logout"
 
 	// pages
 	Home        = "/"

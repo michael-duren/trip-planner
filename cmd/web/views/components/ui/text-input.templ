@@ -3,6 +3,7 @@ package ui
 type InputProps struct {
 	Name, Placeholder, Label, Inputtype string
 	Required                            bool
+	OtherAttributes                     templ.Attributes
 }
 
 templ TextInput(props *InputProps) {
@@ -20,6 +21,7 @@ templ TextInput(props *InputProps) {
 				name={ props.Name }
 				type={ props.Inputtype }
 				placeholder={ props.Placeholder }
+				{ props.OtherAttributes... }
 				required
 			/>
 		} else {
@@ -29,6 +31,7 @@ templ TextInput(props *InputProps) {
 				name={ props.Name }
 				type={ props.Inputtype }
 				placeholder={ props.Placeholder }
+				{ props.OtherAttributes... }
 			/>
 		}
 	</div>

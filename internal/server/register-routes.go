@@ -32,7 +32,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// api
 	mux.HandleFunc("/test-endpoint", h.HelloWorldHandler)
 	mux.HandleFunc("/health", s.healthHandler)
+
+	// auth forms
 	mux.HandleFunc(routes.Login, c.Auth.MapLogin)
+	mux.HandleFunc(routes.Register, c.Auth.MapRegister)
+	mux.HandleFunc(routes.Logout, c.Auth.MapLogout)
 
 	// pages
 	// home

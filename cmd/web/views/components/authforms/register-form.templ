@@ -1,12 +1,50 @@
 package authforms
 
-import "trip-planner/cmd/web/views/components/ui"
+import (
+	"trip-planner/cmd/web/views/components/ui"
+	"trip-planner/internal/server/routes"
+)
 
 type RegisterFormValidationErrors = map[string]string
 
-templ RegisterForm(validationErrors *RegisterFormValidationErrors) {
+type RegisterFormValues struct {
+	Username, Email, Password, RePassword string
+}
+
+type RegisterFormProps struct {
+	ValidationErrors *RegisterFormValidationErrors
+	FormValues       *RegisterFormValues
+}
+
+func NewRegisterFormProps(registerValidationErrors *RegisterFormValidationErrors, values *RegisterFormValues) *RegisterFormProps {
+	return &RegisterFormProps{
+		ValidationErrors: registerValidationErrors,
+		FormValues:       values,
+	}
+}
+
+func retrieveFormValues(props *RegisterFormProps) *RegisterFormValues {
+	if props == nil || props.FormValues == nil {
+		return &RegisterFormValues{
+			Username:   "",
+			Email:      "",
+			Password:   "",
+			RePassword: "",
+		}
+	}
+
+	return props.FormValues
+}
+
+templ RegisterForm(props *RegisterFormProps) {
 	@ui.Modal() {
-		<form class="flex flex-col gap-2 p-8 w-80">
+		<form
+			hx-post={ routes.Register }
+			id="register-form"
+			hx-swap="outerHTML"
+			hx-target="#register-form"
+			class="flex flex-col gap-2 p-8 w-80"
+		>
 			<div class="flex justify-between">
 				<h2 class="text-lg font-semibold">Register</h2>
 				@ui.Button(&ui.ButtonProps{
@@ -20,32 +58,36 @@ templ RegisterForm(validationErrors *RegisterFormValidationErrors) {
 				}
 			</div>
 			@ui.TextInput(&ui.InputProps{
-				Label:       "Username",
-				Inputtype:   "username",
-				Placeholder: "username",
-				Name:        "text",
-				Required:    true,
+				Label:           "Username",
+				Inputtype:       "text",
+				Placeholder:     "username",
+				Name:            "username",
+				Required:        true,
+				OtherAttributes: templ.Attributes{"value": retrieveFormValues(props).Username},
 			})
 			@ui.TextInput(&ui.InputProps{
-				Label:       "Email",
-				Inputtype:   "email",
-				Placeholder: "example@gmail.com",
-				Name:        "email",
-				Required:    true,
+				Label:           "Email",
+				Inputtype:       "email",
+				Placeholder:     "example@gmail.com",
+				Name:            "email",
+				Required:        true,
+				OtherAttributes: templ.Attributes{"value": retrieveFormValues(props).Email},
 			})
 			@ui.TextInput(&ui.InputProps{
-				Label:       "Password",
-				Inputtype:   "password",
-				Placeholder: "",
-				Name:        "password",
-				Required:    true,
+				Label:           "Password",
+				Inputtype:       "password",
+				Placeholder:     "",
+				Name:            "password",
+				Required:        true,
+				OtherAttributes: templ.Attributes{"value": retrieveFormValues(props).Password},
 			})
 			@ui.TextInput(&ui.InputProps{
-				Label:       "Retype Password",
-				Inputtype:   "password",
-				Placeholder: "",
-				Name:        "re-password",
-				Required:    true,
+				Label:           "Retype Password",
+				Inputtype:       "password",
+				Placeholder:     "",
+				Name:            "re-password",
+				Required:        true,
+				OtherAttributes: templ.Attributes{"value": retrieveFormValues(props).RePassword},
 			})
 			<div class="mt-2">
 				@ui.Button(&ui.ButtonProps{
@@ -58,13 +100,13 @@ templ RegisterForm(validationErrors *RegisterFormValidationErrors) {
 					Sign Up
 				}
 			</div>
-            if validationErrors != nil {
-                    <ul>
-                    for _, v := range *validationErrors {
-                            <li class="text-red-500">{ v }</li>
-                        }
-                    </ul>
-                }
+			if props != nil && props.ValidationErrors != nil {
+				<ul>
+					for _, v := range *props.ValidationErrors {
+						<li class="text-red-500">{ v }</li>
+					}
+				</ul>
+			}
 		</form>
 	}
 }

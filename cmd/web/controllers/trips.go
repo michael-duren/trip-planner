@@ -34,18 +34,16 @@ func (c *Trips) Map(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Trips) Get(w http.ResponseWriter, r *http.Request) {
-	email := r.URL.Query().Get("email")
-	if email == "" {
-		// redirect to trips if already in q params
-		http.Redirect(w, r, routes.Home, http.StatusTemporaryRedirect)
+	user, _ := c.store.GetUserFromSession(r, w)
+	if user == nil {
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	user, _ := c.queries.GetUserByEmail(r.Context(), email)
 	trips, _ := c.queries.ListUserTrips(r.Context(), user.UserID)
 	logger := log.Default()
 	logger.Println("total trips: ", len(trips))
 
-	RenderComponent(views.Trips(models.NewTripsModel(email, &trips)), w, r)
+	RenderComponent(views.Trips(models.NewTripsModel(user.Email, &trips)), w, r)
 }
 
 func (c *Trips) MapNewTrips(w http.ResponseWriter, r *http.Request) {

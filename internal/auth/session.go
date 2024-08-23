@@ -11,14 +11,15 @@ import (
 )
 
 type UserDto struct {
-	UserID   int32
 	Email    string
 	Username string
+	UserID   int32
 }
 
 type UserSessionStore interface {
 	GetUserFromSession(r *http.Request, w http.ResponseWriter) (*UserDto, error)
 	CreateUserSession(r *http.Request, w http.ResponseWriter, user *database.User) error
+	DeleteUserSession(r *http.Request, w http.ResponseWriter) error
 }
 
 const (
@@ -75,7 +76,7 @@ func (u *userSessionStore) CreateUserSession(r *http.Request, w http.ResponseWri
 		return err
 	}
 
-	userSession.Values[userKey] = userDtoJson
+	userSession.Values[userKey] = string(userDtoJson)
 	err = u.saveSession(r, w, userSession)
 	if err != nil {
 		return err
@@ -88,15 +89,31 @@ func (u *userSessionStore) GetUserFromSession(r *http.Request, w http.ResponseWr
 	if err != nil {
 		return nil, err
 	}
-	userDtoJson := userSession.Values[userSessionKey]
-	if userDtoBytes, ok := userDtoJson.([]byte); !ok {
-		return nil, fmt.Errorf("userDtoJson from user session not correct type: %s", userDtoJson)
-	} else {
-		var userDto *UserDto
-		err = json.Unmarshal(userDtoBytes, &userDto)
-		if err != nil {
-			return nil, err
-		}
-		return userDto, nil
+	userDtoJson := userSession.Values[userKey]
+	var userDtoBytes []byte
+	// Check if the retrieved data is of type string, then convert to []byte
+	switch v := userDtoJson.(type) {
+	case string:
+		userDtoBytes = []byte(v)
+	case []byte:
+		userDtoBytes = v
+	default:
+		return nil, fmt.Errorf("userDtoJson from user session not correct type: %T", userDtoJson)
 	}
+
+	var userDto UserDto
+	err = json.Unmarshal(userDtoBytes, &userDto)
+	if err != nil {
+		return nil, err
+	}
+	return &userDto, nil
+}
+
+func (u *userSessionStore) DeleteUserSession(r *http.Request, w http.ResponseWriter) error {
+	userSession, err := u.getSession(r)
+	if err != nil {
+		return err
+	}
+	userSession.Options.MaxAge = -1
+	return u.saveSession(r, w, userSession)
 }
