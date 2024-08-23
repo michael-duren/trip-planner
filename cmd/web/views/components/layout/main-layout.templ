@@ -6,7 +6,7 @@ templ MainLayout(model *models.MainLayoutModel) {
 	@Base() {
 		<body class="flex flex-col min-h-[100vh]">
 			@Header(&model.Email)
-			<main class="flex-1 m-8">
+			<main class="flex-1 m-8 max-w-screen-lg mx-auto">
 				{ children... }
 			</main>
 			@Footer()

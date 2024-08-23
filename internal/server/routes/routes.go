@@ -7,6 +7,11 @@ import (
 )
 
 const (
+	// apis
+	Login    = "/api/auth/login"
+	Register = "/api/auth/register"
+
+	// pages
 	Home        = "/"
 	Trips       = "/trips"
 	TripBuilder = "/tripbuilder"

@@ -1,5 +1,7 @@
 package ui
 
+import "fmt"
+
 type ButtonStyle int
 
 const (
@@ -14,67 +16,67 @@ const (
 )
 
 type ButtonProps struct {
+	// Button styles are string constants defined in button.templ
 	ButtonStyle ButtonStyle
-	ButtonType  string
+	// ButtonType i.e. "button", "submit", etc
+	ButtonType string
+	// Button size is measured in sm, md, lg
+	ButtonSize string
+	// HTMX Attributes
+	HtmxAttributes *templ.Attributes
+	// w-full or not
+	FullWidth bool
+}
+
+func getButtonSize(size string) string {
+	switch size {
+	case "sm":
+		return "px-3 py-1.5 text-sm"
+	case "md":
+		return "px-4 py-2 text-base"
+	case "lg":
+		return "px-5 py-2.5 text-lg"
+	}
+	return "px-3 py-1.5 text-sm"
+}
+
+func getButtonStyle(style ButtonStyle) string {
+	switch style {
+	case Default:
+		return "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg    me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+	case Alternative:
+		return "  me-2 mb-2  font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+	case Dark:
+		return "text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg    me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+	case Light:
+		return "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg    me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+	case Green:
+		return "focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg    me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+	case Red:
+		return "focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg    me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+	case Yellow:
+		return "focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg    me-2 mb-2 dark:focus:ring-yellow-900"
+	case Purple:
+		return "focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg    me-2 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+	}
+	return "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg    me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+}
+
+func getFullWidth(full bool) string {
+	if full {
+		return "w-full"
+	}
+	return ""
 }
 
 templ Button(props *ButtonProps) {
-	switch (props.ButtonStyle) {
-		case Default:
-			<button
-				type={ props.ButtonType }
-				class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-			>
-				{ children... }
-			</button>
-		case Alternative:
-			<button
-				type={ props.ButtonType }
-				class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-			>
-				{ children... }
-			</button>
-		case Dark:
-			<button
-				type={ props.ButtonType }
-				class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-			>
-				{ children... }
-			</button>
-		case Light:
-			<button
-				type={ props.ButtonType }
-				class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-			>
-				{ children... }
-			</button>
-		case Green:
-			<button
-				type={ props.ButtonType }
-				class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-			>
-				{ children... }
-			</button>
-		case Red:
-			<button
-				type={ props.ButtonType }
-				class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-			>
-				{ children... }
-			</button>
-		case Yellow:
-			<button
-				type={ props.ButtonType }
-				class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900"
-			>
-				{ children... }
-			</button>
-		case Purple:
-			<button
-				type={ props.ButtonType }
-				class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900"
-			>
-				{ children... }
-			</button>
-	}
+	<button
+		type={ props.ButtonType }
+		class={ fmt.Sprintf("%s %s %s", getButtonSize(props.ButtonSize), getButtonStyle(props.ButtonStyle), getFullWidth(props.FullWidth)) }
+		if props.HtmxAttributes != nil {
+			{ *props.HtmxAttributes... }
+		}
+	>
+		{ children... }
+	</button>
 }

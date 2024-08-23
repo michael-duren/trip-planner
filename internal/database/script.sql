@@ -1,5 +1,9 @@
--- POSTGRES
--- CREATE TABLE/SCHEMA
+-- For creating the tables in db
+DROP TABLE IF EXISTS "Users";
+DROP TABLE IF EXISTS Trips;
+DROP TABLE IF EXISTS TripLists;
+DROP TABLE IF EXISTS TripItems;
+
 CREATE TABLE "Users" (
     user_id SERIAL PRIMARY KEY,
     email TEXT NOT NULL,

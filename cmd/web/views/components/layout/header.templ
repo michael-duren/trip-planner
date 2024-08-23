@@ -3,7 +3,7 @@ package layout
 import "trip-planner/internal/server/routes"
 
 templ Header(email *string) {
-	<header class="bg-blue-600 flex justify-between text-gray-50 shadow-md py-4 px-8">
+	<header class="bg-indigo-600 flex justify-between text-gray-50 shadow-md py-4 px-8">
 		<h2 class="text-2xl font-bold font-serif">Trip Planner</h2>
 		<div class="flex gap-2 items-center">
 			if email != nil && *email != "" {
@@ -15,8 +15,7 @@ templ Header(email *string) {
 					href={ routes.Home }
 				>Logout</a>
 			} else {
-				<p>Welcome,</p>
-				<p>Enter your email below</p>
+				<p></p>
 			}
 		</div>
 	</header>

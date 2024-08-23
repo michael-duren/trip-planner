@@ -2,24 +2,58 @@ package views
 
 import (
 	"trip-planner/cmd/web/models"
+	"trip-planner/cmd/web/views/components/authforms"
 	"trip-planner/cmd/web/views/components/layout"
+	"trip-planner/cmd/web/views/components/ui"
 )
 
 templ Home(model models.HomeModel) {
 	@layout.MainLayout(model.MainLayoutModel) {
-		<div class="flex flex-col items-center justify-center gap-8">
-			<div class="mx-auto">
-				<img class="rounded-md h-[50vh] max-h-[70vh] shadow-md" src="assets/img/lake.jpeg" alt="a picture of a lake"/>
-			</div>
-			<form class="flex flex-col flex-1 gap-4 max-w-[635px] w-full">
-				<label for="email">Enter your email to get started</label>
-				<div class="flex gap-4">
-					<input class="p-4 w-full border border-gray-600 text-lg rounded-md" name="email" type="email"/>
-					<button
-						class="px-8 py-6 text-xl font-bold rounded-md bg-green-500 hover:bg-green-600 text-gray-50"
-					>Start</button>
+		<div x-data="{ login: false, register: false }" id="home-content" class="flex md:flex-row mt-16 flex-col gap-4 px-8">
+			<div class="flex-1 flex flex-col justify-between">
+				<div>
+					<h1 class="text-4xl font-bold text-center mb-4">Welcome to Trip Planner</h1>
+					<p>
+						Ex occaecat sit nostrud minim labore quis fugiat labore commodo nulla. Ea occaecat et non dolore fugiat
+						sint anim. Tempor sunt cillum Lorem excepteur occaecat pariatur aliquip ex eiusmod elit nostrud.
+						Pariatur id exercitation ea aliquip aliqua esse ut et non tempor dolore et.
+					</p>
 				</div>
-			</form>
+				<div class="flex gap-2 w-full">
+					@ui.Button(&ui.ButtonProps{
+						ButtonStyle:    ui.Purple,
+						ButtonType:     "button",
+						ButtonSize:     "lg",
+						HtmxAttributes: &templ.Attributes{"@click": "register = !register"},
+						FullWidth:      true}) {
+						Sign Up
+					}
+					@ui.Button(&ui.ButtonProps{
+						ButtonStyle:    ui.Light,
+						ButtonType:     "button",
+						ButtonSize:     "lg",
+						HtmxAttributes: &templ.Attributes{"@click": "login = !login"},
+						FullWidth:      true,
+					}) {
+						Login
+					}
+				</div>
+			</div>
+			<div class="flex-1 flex flex-col items-center justify-center gap-8">
+				<div class="mx-auto">
+					<img
+						class="rounded-md h-[50vh] max-h-[70vh] shadow-md"
+						src="assets/img/lake.jpeg"
+						alt="a picture of a lake"
+					/>
+				</div>
+			</div>
+			<div x-show="login">
+				@authforms.LoginForm()
+			</div>
+			<div x-show="register">
+				@authforms.RegisterForm()
+			</div>
 		</div>
 	}
 }

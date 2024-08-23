@@ -12,7 +12,7 @@ templ TripList(model *models.TripsModel) {
 			<div class="group overflow-hidden flex justify-end flex-col items-end">
 				<button
 					class="bg-green-500 group shadow-md h-8 flex items-center justify-center w-8 rounded-md hover:bg-green-600"
-					hx-get={ routes.QueryParamBuilder(routes.NewTrips, map[string]string{"email": model.Email}) }
+					hx-get={ routes.QueryParamBuilder(routes.NewTrips, routes.QueryParams{"email": model.Email}) }
 					hx-target="#trips-container"
 					hx-swap="outerHTML"
 				>

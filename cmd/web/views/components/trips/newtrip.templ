@@ -25,6 +25,9 @@ templ NewTrip(email string) {
 		@ui.Button(&ui.ButtonProps{
 			ButtonType:  "submit",
 			ButtonStyle: ui.Green,
+            ButtonSize: "md",
+            HtmxAttributes: nil,
+            FullWidth: true,
 		}) {
 			Start
 		}

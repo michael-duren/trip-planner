@@ -59,7 +59,7 @@ func NewService() Service {
 	if err != nil {
 		log.Fatal(err)
 	}
-	q := NewQueries(db)
+	q := New(db)
 	dbInstance = &service{
 		db:      db,
 		queries: q,

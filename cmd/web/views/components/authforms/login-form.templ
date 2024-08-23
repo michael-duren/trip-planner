@@ -1,0 +1,48 @@
+package authforms
+
+import "trip-planner/cmd/web/views/components/ui"
+
+templ LoginForm() {
+	@ui.Modal() {
+		<form class="flex flex-col gap-2 p-8 w-80">
+			<div class="flex justify-between">
+				<h2 class="text-lg font-semibold">Login</h2>
+				<!-- <button type="button" @click="login = !login">X</button> -->
+				@ui.Button(&ui.ButtonProps{
+					ButtonStyle:    ui.Light,
+					ButtonType:     "button",
+					ButtonSize:     "sm",
+					HtmxAttributes: &templ.Attributes{"@click": "login = !login"},
+					FullWidth:      false,
+				}) {
+					Close
+				}
+			</div>
+			@ui.TextInput(&ui.InputProps{
+				Label:       "Email",
+				Inputtype:   "email",
+				Placeholder: "example@gmail.com",
+				Name:        "email",
+				Required:    true,
+			})
+			@ui.TextInput(&ui.InputProps{
+				Label:       "Password",
+				Inputtype:   "password",
+				Placeholder: "",
+				Name:        "password",
+				Required:    true,
+			})
+			<div class="mt-2">
+				@ui.Button(&ui.ButtonProps{
+					ButtonStyle:    ui.Green,
+					ButtonType:     "submit",
+					ButtonSize:     "md",
+					HtmxAttributes: nil,
+					FullWidth:      true,
+				}) {
+					Login
+				}
+			</div>
+		</form>
+	}
+}

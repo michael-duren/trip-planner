@@ -7,6 +7,7 @@ import (
 	"trip-planner/cmd/web"
 	"trip-planner/cmd/web/controllers"
 	"trip-planner/cmd/web/views"
+	"trip-planner/internal/auth"
 	"trip-planner/internal/server/handlers"
 	"trip-planner/internal/server/routes"
 
@@ -16,7 +17,8 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	mux := http.NewServeMux()
 	h := handlers.NewHandlers(s.db.UseQueries())
-	c := controllers.NewControllers(s.db.UseQueries())
+	store := auth.CreateStore()
+	c := controllers.NewControllers(s.db.UseQueries(), store)
 
 	fileServer := http.FileServer(http.FS(web.Files))
 	mux.Handle("/assets/", fileServer)
@@ -24,7 +26,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// api
 	mux.HandleFunc("/test-endpoint", h.HelloWorldHandler)
 	mux.HandleFunc("/health", s.healthHandler)
+	mux.HandleFunc(routes.Login, c.Auth.MapLogin)
 
+	// pages
 	// home
 	mux.HandleFunc(routes.Home, c.Home.Map)
 	// trips
@@ -35,7 +39,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	// examples
 	mux.Handle("/web", templ.Handler(views.HelloForm()))
-	mux.HandleFunc("/hello", c.HelloWorld.Post)
 
 	return mux
 }

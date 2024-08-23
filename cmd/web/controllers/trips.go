@@ -8,15 +8,19 @@ import (
 	"trip-planner/cmd/web/views/components/trips"
 	"trip-planner/internal/database"
 	"trip-planner/internal/server/routes"
+
+	"github.com/gorilla/sessions"
 )
 
 type Trips struct {
 	queries *database.Queries
+	store   *sessions.CookieStore
 }
 
-func NewTrips(q *database.Queries) *Trips {
+func NewTrips(q *database.Queries, s *sessions.CookieStore) *Trips {
 	return &Trips{
 		queries: q,
+		store:   s,
 	}
 }
 

@@ -7,15 +7,19 @@ import (
 	"trip-planner/cmd/web/views"
 	"trip-planner/internal/database"
 	"trip-planner/internal/server/routes"
+
+	"github.com/gorilla/sessions"
 )
 
 type Home struct {
 	queries *database.Queries
+	store   *sessions.CookieStore
 }
 
-func NewHome(q *database.Queries) *Home {
+func NewHome(q *database.Queries, s *sessions.CookieStore) *Home {
 	return &Home{
 		queries: q,
+		store:   s,
 	}
 }
 
