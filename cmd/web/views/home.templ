@@ -49,10 +49,10 @@ templ Home(model models.HomeModel) {
 				</div>
 			</div>
 			<div x-show="login">
-				@authforms.LoginForm()
+				@authforms.LoginForm(nil)
 			</div>
 			<div x-show="register">
-				@authforms.RegisterForm()
+				@authforms.RegisterForm(nil)
 			</div>
 		</div>
 	}

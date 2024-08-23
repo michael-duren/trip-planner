@@ -5,21 +5,23 @@ import (
 	"net/http"
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
+	"trip-planner/internal/auth"
 	"trip-planner/internal/database"
+	"trip-planner/internal/logging"
 	"trip-planner/internal/server/routes"
-
-	"github.com/gorilla/sessions"
 )
 
 type TripBuilder struct {
 	queries *database.Queries
-	store   *sessions.CookieStore
+	store   auth.UserSessionStore
+	logger  logging.Logger
 }
 
-func NewTripBuilder(q *database.Queries, s *sessions.CookieStore) *TripBuilder {
+func NewTripBuilder(q *database.Queries, u auth.UserSessionStore, l logging.Logger) *TripBuilder {
 	return &TripBuilder{
 		queries: q,
-		store:   s,
+		store:   u,
+		logger:  l,
 	}
 }
 

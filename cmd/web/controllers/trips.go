@@ -6,21 +6,23 @@ import (
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
 	"trip-planner/cmd/web/views/components/trips"
+	"trip-planner/internal/auth"
 	"trip-planner/internal/database"
+	"trip-planner/internal/logging"
 	"trip-planner/internal/server/routes"
-
-	"github.com/gorilla/sessions"
 )
 
 type Trips struct {
 	queries *database.Queries
-	store   *sessions.CookieStore
+	store   auth.UserSessionStore
+	logger  logging.Logger
 }
 
-func NewTrips(q *database.Queries, s *sessions.CookieStore) *Trips {
+func NewTrips(q *database.Queries, u auth.UserSessionStore, l logging.Logger) *Trips {
 	return &Trips{
 		queries: q,
-		store:   s,
+		store:   u,
+		logger:  l,
 	}
 }
 

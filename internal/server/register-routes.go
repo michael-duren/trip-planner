@@ -8,6 +8,7 @@ import (
 	"trip-planner/cmd/web/controllers"
 	"trip-planner/cmd/web/views"
 	"trip-planner/internal/auth"
+	"trip-planner/internal/logging"
 	"trip-planner/internal/server/handlers"
 	"trip-planner/internal/server/routes"
 
@@ -17,8 +18,13 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	mux := http.NewServeMux()
 	h := handlers.NewHandlers(s.db.UseQueries())
-	store := auth.CreateStore()
-	c := controllers.NewControllers(s.db.UseQueries(), store)
+
+	// di - inject dependencies
+	c := controllers.NewControllers(
+		s.db.UseQueries(),
+		auth.NewUserSessionStore(),
+		logging.NewDefaultLogger(),
+	)
 
 	fileServer := http.FileServer(http.FS(web.Files))
 	mux.Handle("/assets/", fileServer)

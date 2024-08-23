@@ -2,7 +2,9 @@ package authforms
 
 import "trip-planner/cmd/web/views/components/ui"
 
-templ RegisterForm() {
+type RegisterFormValidationErrors = map[string]string
+
+templ RegisterForm(validationErrors *RegisterFormValidationErrors) {
 	@ui.Modal() {
 		<form class="flex flex-col gap-2 p-8 w-80">
 			<div class="flex justify-between">
@@ -56,6 +58,13 @@ templ RegisterForm() {
 					Sign Up
 				}
 			</div>
+            if validationErrors != nil {
+                    <ul>
+                    for _, v := range *validationErrors {
+                            <li class="text-red-500">{ v }</li>
+                        }
+                    </ul>
+                }
 		</form>
 	}
 }

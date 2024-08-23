@@ -6,6 +6,10 @@ WHERE user_id = $1 LIMIT 1;
 SELECT * FROM "Users"
 WHERE email = $1 LIMIT 1;
 
+-- name: GetUserByUsername :one
+SELECT * FROM "Users"
+WHERE username = $1 LIMIT 1;
+
 -- name: ListUserTrips :many
 SELECT * FROM TripLists
 WHERE user_id = $1
@@ -25,7 +29,7 @@ RETURNING *;
 
 -- name: LoginUser :one
 SELECT * FROM "Users"
-WHERE username = $1
+WHERE email = $1
 AND password = $2;
 
 -- name: UpdateUserEmail :exec

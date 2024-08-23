@@ -2,7 +2,9 @@ package authforms
 
 import "trip-planner/cmd/web/views/components/ui"
 
-templ LoginForm() {
+type LoginValidationErrors map[string]string
+
+templ LoginForm(loginValidationErrors *LoginValidationErrors) {
 	@ui.Modal() {
 		<form class="flex flex-col gap-2 p-8 w-80">
 			<div class="flex justify-between">
@@ -43,6 +45,13 @@ templ LoginForm() {
 					Login
 				}
 			</div>
+			if loginValidationErrors != nil {
+				<ul>
+					for _, v := range *loginValidationErrors {
+						<li class="text-red-500">{ v }</li>
+					}
+				</ul>
+			}
 		</form>
 	}
 }

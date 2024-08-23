@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"trip-planner/internal/auth"
 	"trip-planner/internal/database"
-
-	"github.com/gorilla/sessions"
+	"trip-planner/internal/logging"
 )
 
 type Controllers struct {
@@ -13,11 +13,11 @@ type Controllers struct {
 	*Auth
 }
 
-func NewControllers(q *database.Queries, s *sessions.CookieStore) *Controllers {
+func NewControllers(q *database.Queries, u auth.UserSessionStore, l logging.Logger) *Controllers {
 	return &Controllers{
-		NewHome(q, s),
-		NewTrips(q, s),
-		NewTripBuilder(q, s),
-		NewAuth(q, s),
+		NewHome(q, u, l),
+		NewTrips(q, u, l),
+		NewTripBuilder(q, u, l),
+		NewAuth(q, u, l),
 	}
 }
