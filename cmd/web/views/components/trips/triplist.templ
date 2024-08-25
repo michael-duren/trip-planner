@@ -6,7 +6,7 @@ import (
 )
 
 templ TripList(model *models.TripsModel) {
-	<div class="htmx-added:opacity-0 opacity-100 transition-opacity duration-1000" id="trips-container">
+	<div class="htmx-added:opacity-0 opacity-100 transition-opacity duration-1000 w-full" id="trips-container">
 		<div class="flex justify-between">
 			<h2 class="text-xl font-bold mb-2">Showing trips for { model.Email }</h2>
 			<div class="group overflow-hidden flex justify-end flex-col items-end">

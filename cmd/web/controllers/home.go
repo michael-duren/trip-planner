@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
@@ -33,12 +32,11 @@ func (c *Home) Map(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Home) Get(w http.ResponseWriter, r *http.Request) {
-	email := r.URL.Query().Get("email")
-	if email != "" {
-		// redirect to trips if already in q params
-		http.Redirect(w, r, fmt.Sprintf("%s?email=%s", routes.Trips, email), http.StatusFound)
+	user, _ := c.store.GetUserFromSession(r, w)
+	if user == nil {
+		RenderComponent(views.Home(*models.NewHomeModel("")), w, r)
 		return
 	}
-
-	RenderComponent(views.Home(*models.NewHomeModel("")), w, r)
+	c.logger.Info(user.ToString())
+	http.Redirect(w, r, routes.Trips, http.StatusTemporaryRedirect)
 }

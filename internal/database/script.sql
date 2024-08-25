@@ -1,7 +1,7 @@
 -- For creating the tables in db
 DROP TABLE IF EXISTS "Users";
 DROP TABLE IF EXISTS Trips;
-DROP TABLE IF EXISTS TripLists;
+-- DROP TABLE IF EXISTS TripLists;
 DROP TABLE IF EXISTS TripItems;
 
 CREATE TABLE "Users" (
@@ -18,13 +18,13 @@ CREATE TABLE Trips (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE TripLists (
-    trip_list_id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INT NOT NULL REFERENCES "User" ON DELETE CASCADE,
-    trip_id INT NOT NULL REFERENCES Trip ON DELETE CASCADE
-);
+-- CREATE TABLE TripLists (
+--     trip_list_id SERIAL PRIMARY KEY,
+--     name TEXT NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     user_id INT NOT NULL REFERENCES "User" ON DELETE CASCADE,
+--     trip_id INT NOT NULL REFERENCES Trip ON DELETE CASCADE
+-- );
 
 CREATE TABLE TripItems (
     trip_item_id SERIAL PRIMARY KEY,

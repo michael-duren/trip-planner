@@ -5,14 +5,29 @@ import (
 	"trip-planner/internal/server/routes"
 )
 
+type NewTripProps struct {
+	tripError string
+}
+
+func NewNewTripProps(tripError string) *NewTripProps {
+	return &NewTripProps{
+		tripError,
+	}
+}
+
 // Needed for Trip is just a name
-templ NewTrip(email string) {
-	<form class="flex flex-col gap-2" action="/trips/new" method="POST">
+templ NewTrip(props *NewTripProps) {
+	<form
+		hx-post={ routes.NewTrips }
+		id="new-trip-form"
+		hx-swap="outerHTML"
+		hx-target="#new-trip-form"
+		class="flex min-w-72 flex-col gap-2"
+	>
 		<div class="flex justify-between">
 			<h1 class="text-2xl font-bold">New Trip</h1>
 			<div>
-				@ui.Link(&ui.LinkProps{Label: "Back", Uri: routes.SafeQueryParamBuilder(routes.Home,
-					map[string]string{"email": email})})
+				@ui.Link(&ui.LinkProps{Label: "Back", Uri: templ.URL(routes.Trips)})
 			</div>
 		</div>
 		@ui.TextInput(&ui.InputProps{
@@ -23,13 +38,16 @@ templ NewTrip(email string) {
 			Required:    true,
 		})
 		@ui.Button(&ui.ButtonProps{
-			ButtonType:  "submit",
-			ButtonStyle: ui.Green,
-            ButtonSize: "md",
-            HtmxAttributes: nil,
-            FullWidth: true,
+			ButtonType:     "submit",
+			ButtonStyle:    ui.Green,
+			ButtonSize:     "md",
+			HtmxAttributes: nil,
+			FullWidth:      true,
 		}) {
 			Start
+		}
+		if props != nil && props.tripError != "" {
+			<p class="font-semibold text-sm list-disc text-red-500">{ props.tripError }</p>
 		}
 	</form>
 }

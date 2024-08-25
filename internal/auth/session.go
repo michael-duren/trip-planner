@@ -16,6 +16,10 @@ type UserDto struct {
 	UserID   int32
 }
 
+func (u *UserDto) ToString() string {
+	return fmt.Sprintf("User: Username: %s, Email: %s, UserId: %d", u.Username, u.Email, u.UserID)
+}
+
 type UserSessionStore interface {
 	GetUserFromSession(r *http.Request, w http.ResponseWriter) (*UserDto, error)
 	CreateUserSession(r *http.Request, w http.ResponseWriter, user *database.User) error
