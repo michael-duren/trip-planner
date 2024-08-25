@@ -1,11 +1,15 @@
 package models
 
-func NewTripBuildersModel(email, tripname string, tripid int) *TripBuildersModel {
-	return &TripBuildersModel{NewMainLayout(email), tripname, tripid}
+import (
+	"trip-planner/internal/auth"
+	"trip-planner/internal/database"
+)
+
+func NewTripBuildersModel(user *auth.UserDto, trip database.Trip) *TripBuildersModel {
+	return &TripBuildersModel{NewMainLayout(user), trip}
 }
 
 type TripBuildersModel struct {
 	*MainLayoutModel
-	Tripname string
-	Tripid   int
+    Trip database.Trip
 }

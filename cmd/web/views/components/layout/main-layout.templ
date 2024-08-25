@@ -5,7 +5,7 @@ import "trip-planner/cmd/web/models"
 templ MainLayout(model *models.MainLayoutModel) {
 	@Base() {
 		<div class="flex flex-col min-h-[100vh]">
-			@Header(&model.Email)
+			@Header(&model.User.Email)
 			<main class="flex-1 m-8 xl:max-w-screen-2xl lg:max-w-screen-xl md:mx-8 mx-auto">
 				{ children... }
 			</main>

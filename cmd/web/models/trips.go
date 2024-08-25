@@ -1,9 +1,12 @@
 package models
 
-import "trip-planner/internal/database"
+import (
+	"trip-planner/internal/auth"
+	"trip-planner/internal/database"
+)
 
-func NewTripsModel(email string, trips *[]database.Trip) *TripsModel {
-	return &TripsModel{NewMainLayout(email), trips}
+func NewTripsModel(user *auth.UserDto, trips *[]database.Trip) *TripsModel {
+	return &TripsModel{NewMainLayout(user), trips}
 }
 
 type TripsModel struct {

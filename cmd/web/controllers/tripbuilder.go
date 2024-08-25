@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"trip-planner/cmd/web/models"
 	"trip-planner/cmd/web/views"
 	"trip-planner/internal/auth"
@@ -32,12 +33,19 @@ func (c *TripBuilder) Map(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TripBuilder) Get(w http.ResponseWriter, r *http.Request) {
+    tripId := r.URL.Query().Get("trip-id")
+    tripIdInt, err := strconv.Atoi(tripId)
+    if tripId == "" || err != nil {
+        http.Redirect(w, r, routes.Home, http.StatusTemporaryRedirect)
+    }
+    trip,_ := c.queries.GetTripById(r.Context(), int32(tripIdInt))
+
 	user, _ := c.store.GetUserFromSession(r, w)
 	if user == nil {
 		http.Redirect(w, r, routes.Home, http.StatusTemporaryRedirect)
 		return
 	}
 
-	// TODO: rm hardcoded values
-	RenderComponent(views.TripBuilder(&models.TripBuildersModel{MainLayoutModel: models.NewMainLayout(user.Email), Tripname: "trip", Tripid: 1}), w, r)
+    model := models.NewTripBuildersModel(user, trip)
+	RenderComponent(views.TripBuilder(model), w, r)
 }

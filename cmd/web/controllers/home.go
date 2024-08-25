@@ -34,7 +34,7 @@ func (c *Home) Map(w http.ResponseWriter, r *http.Request) {
 func (c *Home) Get(w http.ResponseWriter, r *http.Request) {
 	user, _ := c.store.GetUserFromSession(r, w)
 	if user == nil {
-		RenderComponent(views.Home(*models.NewHomeModel("")), w, r)
+		RenderComponent(views.Home(*models.NewHomeModel(nil)), w, r)
 		return
 	}
 	c.logger.Info(user.ToString())

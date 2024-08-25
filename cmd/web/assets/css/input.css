@@ -1,3 +1,47 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ICONS */
+
+/* .add-circle { */
+/*   background-image: url("assets/icons/add-circle.svg"); */
+/*   background-size: cover; */
+/* } */
+/* .alt-arrow-down{ */
+/*   background-image: url("assets/icons/alt-arrow-down.svg"); */
+/*   background-size: cover; */
+/* } */
+/* .alt-arrow-left{ */
+/**/
+/* } */
+/* .alt-arrow-right{ */
+/**/
+/* } */
+/* .alt-arrow-up */
+/* .check */
+/* .document-text */
+/* .document */
+/* .documents-minimalistic */
+/* .documents */
+/* .download-minimalistic */
+/* .download-square */
+/* .eye-closed */
+/* .eye */
+/* .heart */
+/* .home */
+/* .layers-minimalistic */
+/* .layers */
+/* .like */
+/* .lock-password-unlocked */
+/* .lock-password */
+/* .shield-cross */
+/* .shield-minimalistic */
+.suitcase-medical {
+  background-image: url("/assets/icons/suitcase-medical.svg");
+  background-size: cover;
+}
+.suitcase {
+  background-image: url("/assets/icons/suitcase.svg");
+  background-size: cover;
+}

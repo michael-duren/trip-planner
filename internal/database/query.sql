@@ -49,6 +49,10 @@ WHERE user_id = $1;
 SELECT * FROM Trips
 WHERE name = $1;
 
+-- name: GetTripById :one
+SELECT * FROM Trips
+WHERE trip_id = $1;
+
 -- name: CreateTrip :one
 INSERT INTO Trips
 (user_id, name, created_at)

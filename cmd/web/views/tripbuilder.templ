@@ -5,8 +5,25 @@ import (
 	"trip-planner/cmd/web/views/components/layout"
 )
 
+var itemNames []string = []string{ "some-item", "another-item",  ""}
+
 templ TripBuilder(model *models.TripBuildersModel) {
 	@layout.MainLayout(model.MainLayoutModel) {
-		<div>{ model.Tripname }</div>
+		<div class="flex flex-col gap-4">
+			<div class="flex flex-col gap-1">
+				<div class="text-sm">Trip Name:</div>
+				<h1 class="text-2xl uppercase font-bold">
+					{ model.Trip.Name }
+				</h1>
+			</div>
+			<div>
+				<h2 class="text-sm">Trip Items;</h2>
+				<ul>
+					for _, i := range itemNames {
+                            <li>{ i }</li>
+                        }
+				</ul>
+			</div>
+		</div>
 	}
 }

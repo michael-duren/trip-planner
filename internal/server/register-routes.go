@@ -6,13 +6,10 @@ import (
 	"net/http"
 	"trip-planner/cmd/web"
 	"trip-planner/cmd/web/controllers"
-	"trip-planner/cmd/web/views"
 	"trip-planner/internal/auth"
 	"trip-planner/internal/logging"
 	"trip-planner/internal/server/handlers"
 	"trip-planner/internal/server/routes"
-
-	"github.com/a-h/templ"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -46,9 +43,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.HandleFunc(routes.NewTrips, c.Trips.MapNewTrips)
 	// tripbuilder
 	mux.HandleFunc(routes.TripBuilder, c.TripBuilder.Map)
-
-	// examples
-	mux.Handle("/web", templ.Handler(views.HelloForm()))
 
 	return mux
 }

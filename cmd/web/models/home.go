@@ -1,7 +1,9 @@
 package models
 
-func NewHomeModel(email string) *HomeModel {
-	return &HomeModel{NewMainLayout(email)}
+import "trip-planner/internal/auth"
+
+func NewHomeModel(user *auth.UserDto) *HomeModel {
+	return &HomeModel{NewMainLayout(user)}
 }
 
 type HomeModel struct {

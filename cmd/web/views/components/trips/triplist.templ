@@ -8,11 +8,11 @@ import (
 templ TripList(model *models.TripsModel) {
 	<div class="htmx-added:opacity-0 opacity-100 transition-opacity duration-1000 w-full" id="trips-container">
 		<div class="flex justify-between">
-			<h2 class="text-xl font-bold mb-2">Showing trips for { model.Email }</h2>
+			<h2 class="text-xl font-bold mb-2">Showing trips for { model.User.Email }</h2>
 			<div class="group overflow-hidden flex justify-end flex-col items-end">
 				<button
 					class="bg-green-500 group shadow-md h-8 flex items-center justify-center w-8 rounded-md hover:bg-green-600"
-					hx-get={ routes.QueryParamBuilder(routes.NewTrips, routes.QueryParams{"email": model.Email}) }
+					hx-get={ routes.QueryParamBuilder(routes.NewTrips, routes.QueryParams{"email": model.User.Email}) }
 					hx-target="#trips-container"
 					hx-swap="outerHTML"
 				>
@@ -45,9 +45,32 @@ templ TripList(model *models.TripsModel) {
 				<p>No trips started yet.</p>
 				<p>Click the plus button to start a new one!</p>
 			} else {
-				for _, t := range *model.Trips {
-					<p>{ t.Name }</p>
-				}
+				<div>
+					<h2 class="text-gray-800 font-bold mb-2 text-lg">Trips:</h2>
+					<ul class="flex flex-col md:flex-row gap-2 flex-wrap">
+						for _, t := range *model.Trips {
+							<li class="font-semibold text-lg flex justify-between w-72 border rounded-md shadow-md p-2">
+								<div class="flex gap-1 items-center">
+                  <div class="suitcase text-gray-900 w-4 h-4"></div>
+									<p>{ t.Name }</p>
+								</div>
+                <div>
+								<a
+									class="text-blue-600 hover:text-blue-700 text-xs"
+									href={ routes.SafeQueryParamBuilder(routes.TripBuilder, routes.QueryParams{"trip-id":
+                        string(t.TripID)}) }
+								>Edit</a>
+								<div
+									class="text-red-600 cursor-pointer hover:text-red-700 text-xs"
+									hx-delete={ routes.QueryParamBuilder(routes.Trips, routes.QueryParams{"trip-id":
+                        string(t.TripID)}) }
+									hx-swap="none"
+								>Delete</div>
+                </div>
+							</li>
+						}
+					</ul>
+				</div>
 			}
 		</div>
 	</div>

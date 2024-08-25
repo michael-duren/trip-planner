@@ -45,7 +45,7 @@ func (c *Trips) Get(w http.ResponseWriter, r *http.Request) {
 	logger := log.Default()
 	logger.Println("total trips: ", len(trips))
 
-	RenderComponent(views.Trips(models.NewTripsModel(user.Email, &trips)), w, r)
+	RenderComponent(views.Trips(models.NewTripsModel(user, &trips)), w, r)
 }
 
 func (c *Trips) MapNewTrips(w http.ResponseWriter, r *http.Request) {
